@@ -1,0 +1,85 @@
+/* Form container */
+form {
+    max-width: 600px;              /* Limit form width */
+    margin: 50px auto;             /* Center form on page */
+    padding: 30px;                 /* Inner spacing */
+    background-color: #f9f9f9;    /* Light background */
+    border-radius: 15px;           /* Rounded corners */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* Soft shadow */
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;                     /* Space between form elements */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effect for the form box */
+form:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+/* Form headings */
+form h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Inputs, textareas, selects */
+form input,
+form textarea,
+form select {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+/* Hover and focus effect */
+form input:hover,
+form textarea:hover,
+form select:hover,
+form input:focus,
+form textarea:focus,
+form select:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.3);
+    outline: none;
+}
+
+/* Submit button */
+form button[type="submit"] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Button hover effect */
+form button[type="submit"]:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+/* Error messages */
+form .errorlist {
+    color: red;
+    font-size: 14px;
+    list-style-type: none;
+    margin: -10px 0 10px 0;
+}
+
+/* Optional: add spacing for labels if using <label> */
+form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
