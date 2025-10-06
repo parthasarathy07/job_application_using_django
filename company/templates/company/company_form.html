@@ -1,0 +1,49 @@
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'auth/css/signup_forms.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="login-page">
+  <div class="login-card">
+    <div class="card-body">
+      <h5 class="card-title">Register a New Company</h5>
+      
+      <form method="post" class="form">
+
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="form-error">
+            {% for error in form.non_field_errors %}
+              {{ error }}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% for field in form %}
+          <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+              <div class="form-error">
+                {% for error in field.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        <br>
+        <button type="submit" class="btn-login">Save Company</button>
+         <br>
+        <a href="{% url 'staff_signup' %}" class="btn btn-secondary">Back to Employer Signup</a>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

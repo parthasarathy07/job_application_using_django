@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block extra_css%}
+<link rel="stylesheet" href="{% static 'css/job_search.css' %}">
+{% endblock%}
+
+{% block content %}
+
+<div class="search-container">
+    <h2>Search Jobs</h2>
+    <form method="GET" action="{% url 'jobs:jobSearch' %}">
+        <input type="text" name="q" placeholder="Search by title, company, or location" value="{{ query|default:'' }}">
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+<div class="job-results">
+    {% if jobs %}
+        {% for job in jobs %}
+            <div class="job-card">
+                <h3>{{ job.title }}</h3>
+                <p><strong>Company:</strong> {{ job.company }}</p>
+                <p><strong>Location:</strong> {{ job.location }}</p>
+                {% if job.salary %}
+                    <p><strong>Salary:</strong> ${{ job.salary }}</p>
+                {% endif %}
+                <p>{{ job.description|truncatewords:30 }}</p>
+                <a href="{% url 'jobs:jobDetail' job.pk %}">View Details</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No jobs found.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% block extra_css %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'auth/css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="login-page">
+    <div class="card shadow-sm login-card">
+      <div class="card-body">
+        <h5 class="card-title mb-2" style="text-align: center;">You are logged out</h5>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <a class="btn btn-secondary" href="{% url 'login' %}">Login again</a>
+          <a class="btn btn-primary" href="{% url 'dashboard:dashboard' %}">Go to Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

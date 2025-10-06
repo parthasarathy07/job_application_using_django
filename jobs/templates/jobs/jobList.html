@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Job List{% endblock %}
+
+{% block content %}
+<h1>Available Jobs</h1>
+
+{% if jobs %}
+<p>Browse the latest job postings below.</p>
+
+<div class="list-group mt-3">
+    {% for job in jobs %}
+        <a href="{{ job.get_absolute_url }}" class="list-group-item list-group-item-action">
+            <h5 class="mb-1">{{ job.title }}</h5>
+            <small class="text-muted">{{ job.company }} · {{ job.location }} · Posted on {{ job.posted_date|date:"M d, Y" }}</small>
+            <br>
+            {% if job.salary %}
+                <span class="badge bg-success">₹ {{ job.salary }}</span>
+            {% endif %}
+        </a>
+    {% endfor %}
+</div>
+{%else%}
+<p class="text-muted">No jobs available right now.</p>
+{%endif%}
+{% endblock %}

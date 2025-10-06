@@ -1,0 +1,56 @@
+
+{% block extra_css %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'auth/css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+
+
+<div class="login-page">
+  <div class="card shadow-sm login-card">
+    <div class="card-body">
+      <h5 class="card-title mb-3">Sign in</h5>
+      {% if next %}
+      <div class="alert alert-info" role="alert">
+        {% if user.is_authenticated %}
+        Your account doesn't have access to this page. To proceed, please login with an account that has access.
+        {% else %}
+        Please login to see this page.
+        {% endif %}
+      </div>
+      {% endif %}
+      {% if form.errors %}
+      <div class="alert alert-danger" role="alert">
+        Your username and password didn't match. Please try again.
+      </div>
+      {% endif %}
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label">{{ form.username.label }}</label>
+          {{ form.username }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">{{ form.password.label }}</label>
+          {{ form.password }}
+        </div>
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+        <button type="submit" class="btn btn-primary btn-login">Login</button>
+      </form>
+    </div>
+     <div class="card-footer d-flex justify-content-between align-items-center">
+      <div>
+        New to Internshala? <a href="{% url 'normal_signup' %}">Sign up</a>
+      </div>
+      <br>
+      <div>
+        <a href="{% url 'password_reset' %}">Lost password?</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+{% endblock %}

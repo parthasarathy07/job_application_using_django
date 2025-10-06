@@ -1,0 +1,75 @@
+/* Navbar custom styling */
+.navbar {
+    background-color: #212529;
+    transition: background-color 0.3s ease;
+}
+
+.navbar:hover {
+    background-color: #343a40;
+}
+
+.navbar .nav-link {
+    color: #ffffff;
+    margin-left: 15px;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+
+.navbar .nav-link::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #0d6efd;
+    transition: width 0.3s ease;
+}
+
+.navbar .nav-link:hover {
+    color: #0d6efd;
+}
+
+.navbar .nav-link:hover::after {
+    width: 100%;
+}
+
+/* Dashboard content */
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: fadeInDown 1s ease forwards;
+}
+
+p {
+    color: #555;
+    font-size: 1rem;
+    opacity: 0;
+    animation: fadeInUp 1.2s ease forwards;
+}
+
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+
+{% block content %}
+<h1>Welcome to the Dashboard{% if user.is_authenticated %}, {{ user.username }}{% endif %}</h1>
+
+<div class="mt-4">
+    
+    <a href="{% url "jobs:jobSearch" %}" class="btn btn-primary btn-lg me-2">🔍 Job Search</a>
+    {% if user.is_authenticated and user.is_staff and not user.is_superuser%}
+          <a href="{% url 'jobs:postJob' %}" class="btn btn-success btn-lg">➕ Post a Job</a>
+    {% endif %}
+
+</div>
+{% endblock %}
