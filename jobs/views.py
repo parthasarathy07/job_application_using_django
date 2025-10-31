@@ -4,7 +4,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.db.models import Q
 
-
+from application.models import Application
 from .models import Job
 from .forms import JobForm
 
@@ -66,3 +66,11 @@ def my_posts(request):
 
     context = {'jobs': jobs}
     return render(request, 'jobs/my_posts.html', context)
+
+@non_superuser_required
+@non_staff_required
+@login_required
+def apply_job(request, pk):
+    job = get_object_or_404(Job, pk=pk)
+    Application.objects.get_or_create(user=request.user, job=job)
+    return redirect('jobs:jobList')
