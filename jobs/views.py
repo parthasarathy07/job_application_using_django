@@ -25,7 +25,7 @@ def job_detail(request, pk):
     return render(request, "jobs/job_detail.html", {"job": job})
 
 @non_superuser_required
-@staff_member_required
+@staff_member_required(login_url='/accounts/login/')
 @login_required
 def post_job(request):
     if request.method == "POST":
@@ -54,7 +54,7 @@ def job_search(request):
 
     return render(request, "jobs/job_search.html", {"jobs": jobs, "query": query})
 
-@staff_member_required
+@staff_member_required(login_url='/accounts/login/')
 @login_required
 def my_posts(request):
     user = request.user
