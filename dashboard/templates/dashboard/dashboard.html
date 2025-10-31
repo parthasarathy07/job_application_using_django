@@ -2,16 +2,24 @@
 
 {% block title %}Dashboard{% endblock %}
 
-
 {% block content %}
-<h1>Welcome to the Dashboard{% if user.is_authenticated %}, {{ user.username }}{% endif %}</h1>
+<div class="flex flex-col items-start justify-center mt-10 px-6">
+  <h1 class="text-3xl font-bold mb-3 text-gray-800">
+    Welcome to the Dashboard{% if user.is_authenticated %}, {{ user.username }}{% endif %}
+  </h1>
 
-<div class="mt-4">
-    
-    <a href="{% url "jobs:jobSearch" %}" class="btn btn-primary btn-lg me-2">🔍 Job Search</a>
-    {% if user.is_authenticated and user.is_staff and not user.is_superuser%}
-          <a href="{% url 'jobs:postJob' %}" class="btn btn-success btn-lg">➕ Post a Job</a>
+  <div class="mt-4 flex flex-wrap items-center gap-4">
+    <a href="{% url 'jobs:jobSearch' %}"
+       class="inline-flex items-center justify-center bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transform transition-all duration-300 ease-out hover:bg-blue-700 hover:shadow-lg hover:-translate-y-1 hover:scale-105">
+       🔍 Job Search
+    </a>
+
+    {% if user.is_authenticated and user.is_staff and not user.is_superuser %}
+      <a href="{% url 'jobs:postJob' %}"
+         class="inline-flex items-center justify-center bg-green-600 text-white font-semibold px-6 py-3 rounded-lg shadow-md transform transition-all duration-300 ease-out hover:bg-green-700 hover:shadow-lg hover:-translate-y-1 hover:scale-105">
+         ➕ Post a Job
+      </a>
     {% endif %}
-
+  </div>
 </div>
 {% endblock %}

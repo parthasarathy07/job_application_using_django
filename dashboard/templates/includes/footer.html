@@ -1,47 +1,41 @@
-<footer class="bg-dark text-light mt-5 py-4">
-  <div class="container">
-    <div class="row">
-      
-      <!-- About Section -->
-      <div class="col-md-4">
-        <h5>About Us</h5>
-        <p>
-          {{ site_name|default:"Job Application System" }} helps you connect with top companies
-          and discover the latest job opportunities.
-        </p>
-      </div>
+<footer class="bg-gray-900 text-gray-300 mt-10 py-8">
+  <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
 
-      <div class="col-md-4">
-        <h5>Quick Links</h5>
-        <ul class="list-unstyled">
-          <li><a href="{% url 'dashboard:dashboard' %}" class="text-light text-decoration-none">Home</a></li>
-          <li><a href="{% url 'jobs:jobList' %}" class="text-light text-decoration-none">Jobs</a></li>
-          {% if request.user.is_authenticated %}
-            <li><a href="{% url 'logout' %}" class="text-light text-decoration-none">Logout</a></li>
-          {% else %}
-            <li><a href="{% url 'login' %}" class="text-light text-decoration-none">Login</a></li>
-            <li><a href="{% url 'normal_signup' %}" class="text-light text-decoration-none">Register</a></li>
-          {% endif %}
-        </ul>
-      </div>
-
-      <!-- Contact Info -->
-      <div class="col-md-4">
-        <h5>Contact</h5>
-        <p>Email: support@jobapp.com</p>
-        <p>Phone: +91 98765 43210</p>
-        <p>
-          <a href="#" class="text-light me-2"><i class="bi bi-facebook"></i></a>
-          <a href="#" class="text-light me-2"><i class="bi bi-twitter"></i></a>
-          <a href="#" class="text-light"><i class="bi bi-linkedin"></i></a>
-        </p>
-      </div>
-
+    <!-- About -->
+    <div>
+      <h5 class="text-lg font-semibold text-white mb-2">About Us</h5>
+      <p class="text-sm leading-relaxed">
+        {{ site_name|default:"Job Application System" }} helps you connect with top companies
+        and discover the latest job opportunities.
+      </p>
     </div>
 
-    <hr class="bg-light">
-    <div class="text-center">
-      <p class="mb-0">&copy; {{ now|date:"Y" }} Job Application System. All Rights Reserved.</p>
+    <!-- Quick Links -->
+    <div>
+      <h5 class="text-lg font-semibold text-white mb-2">Quick Links</h5>
+      <ul class="space-y-1 text-sm">
+        <li><a href="{% url 'dashboard:dashboard' %}" class="hover:text-blue-400">Home</a></li>
+        <li><a href="{% url 'jobs:jobList' %}" class="hover:text-blue-400">Jobs</a></li>
+      </ul>
     </div>
+
+    <!-- Contact -->
+    <div>
+      <h5 class="text-lg font-semibold text-white mb-2">Contact</h5>
+      <p class="text-sm">Email: support@jobapp.com</p>
+      <p class="text-sm">Phone: +91 98765 43210</p>
+      <div class="flex space-x-4 mt-3 text-lg">
+        <a href="#" class="hover:text-blue-400"><i class="bi bi-facebook"></i></a>
+        <a href="#" class="hover:text-blue-400"><i class="bi bi-twitter"></i></a>
+        <a href="#" class="hover:text-blue-400"><i class="bi bi-linkedin"></i></a>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="border-gray-700 my-6">
+
+  <div class="text-center text-sm text-gray-400">
+    <p>&copy; {{ now|date:"Y" }} Job Application System. All Rights Reserved.</p>
   </div>
 </footer>

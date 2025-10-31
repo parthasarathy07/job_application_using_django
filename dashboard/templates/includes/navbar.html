@@ -1,32 +1,163 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'dashboard:dashboard' %}">Dashboard</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+<nav class="bg-[#212529] text-white shadow-md transition-colors duration-300 hover:bg-[#343a40] relative z-50">
+  <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+
+    <a href="{% url 'dashboard:dashboard' %}"
+       class="text-xl font-semibold text-white hover:text-blue-500 transition-colors duration-300">
+      Job Application System
+    </a>
+
+    <button id="menu-toggle"
+            class="lg:hidden focus:outline-none text-gray-300 hover:text-white">
+      <svg xmlns="http://www.w3.org/2000/svg"
+           class="h-6 w-6" fill="none"
+           viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+
+    <div id="menu"
+         class="hidden lg:flex flex-col lg:flex-row lg:items-center w-full lg:w-auto mt-3 lg:mt-0 
+                space-y-2 lg:space-y-0 lg:space-x-6 text-sm font-medium">
+
+      <a href="{% url 'dashboard:dashboard' %}"
+         class="relative text-white ml-[15px] transition-colors duration-300 hover:text-blue-500 
+                after:content-[''] after:absolute after:w-0 after:h-[2px] after:-bottom-1 
+                after:left-0 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full">
+        Home
+      </a>
+
+      <a href="{% url 'jobs:jobList' %}"
+         class="relative text-white ml-[15px] transition-colors duration-300 hover:text-blue-500 
+                after:content-[''] after:absolute after:w-0 after:h-[2px] after:-bottom-1 
+                after:left-0 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full">
+        Jobs
+      </a>
+
+      {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}?next={{ request.path }}"
+           class="relative text-white ml-[15px] transition-colors duration-300 hover:text-red-400 
+                  after:content-[''] after:absolute after:w-0 after:h-[2px] after:-bottom-1 
+                  after:left-0 after:bg-red-500 after:transition-all after:duration-300 hover:after:w-full">
+          Logout
+        </a>
+
+      {% else %}
+        <div class="flex items-center space-x-3 ml-[15px]">
+          <a href="{% url 'login' %}"
+             class="relative text-white transition-colors duration-300 hover:text-blue-500 
+                    after:content-[''] after:absolute after:w-0 after:h-[2px] after:-bottom-1 
+                    after:left-0 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full">
+            Login
+          </a>
+
+          <span class="text-gray-500">/</span>
+
+          <div class="relative" id="register-root">
+            <button id="register-button"
+                    class="relative flex items-center space-x-1 text-white transition-colors duration-300 hover:text-blue-500 focus:outline-none"
+                    aria-expanded="false" aria-haspopup="true">
+              <span>Register</span>
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   class="h-4 w-4 transition-transform duration-300"
+                   fill="none" viewBox="0 0 24 24"
+                   stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:dashboard' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'jobs:jobList' %}">Jobs</a></li>
-                    
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                           <a class="nav-link" href="{% url 'logout' %}?next={{ request.path }}">Logout</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Login / Register
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
-                                <li><a class="dropdown-item" href="{% url 'staff_signup' %}">Register as Employer</a></li>
-                                <li><a class="dropdown-item" href="{% url 'normal_signup' %}">Register as Employee</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
-                            </ul>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
+
+            <ul id="register-dropdown"
+                class="lg:absolute lg:top-full lg:right-0 mt-2 lg:mt-3 w-52 bg-gray-800 text-gray-200 rounded-md shadow-lg
+                       transform transition-all duration-200 origin-top-right
+                       opacity-0 invisible pointer-events-none lg:translate-y-1
+                       lg:backdrop-filter lg:backdrop-blur-none">
+              <li>
+                <a href="{% url 'staff_signup' %}"
+                   class="block px-3 text-center py-2 hover:bg-gray-700 rounded-t-md transition-colors duration-200">
+                  Register as Employer
+                </a>
+              </li>
+
+              <li><hr class="border-gray-700 my-[1px]"></li>
+
+              <li>
+                <a href="{% url 'normal_signup' %}"
+                   class="block px-3 text-center py-2 hover:bg-gray-700 rounded-b-md transition-colors duration-200">
+                  Register as Employee
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
-    </nav>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const menuToggle = document.getElementById('menu-toggle');
+      const menu = document.getElementById('menu');
+      const registerRoot = document.getElementById('register-root');
+      const registerButton = document.getElementById('register-button');
+      const dropdown = document.getElementById('register-dropdown');
+
+      menuToggle && menuToggle.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+      });
+
+      function openDropdown() {
+        dropdown.classList.remove('opacity-0', 'invisible', 'pointer-events-none', 'lg:translate-y-1');
+        dropdown.classList.add('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
+        registerButton.setAttribute('aria-expanded', 'true');
+        registerButton.querySelector('svg')?.classList.add('rotate-180');
+      }
+      function closeDropdown() {
+        dropdown.classList.add('opacity-0', 'invisible', 'pointer-events-none', 'lg:translate-y-1');
+        dropdown.classList.remove('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
+        registerButton.setAttribute('aria-expanded', 'false');
+        registerButton.querySelector('svg')?.classList.remove('rotate-180');
+      }
+
+      closeDropdown();
+
+      registerButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const expanded = registerButton.getAttribute('aria-expanded') === 'true';
+        if (expanded) closeDropdown(); else openDropdown();
+      });
+
+      let closeTimer = null;
+      registerRoot.addEventListener('mouseenter', () => {
+        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+          clearTimeout(closeTimer);
+          openDropdown();
+        }
+      });
+      registerRoot.addEventListener('mouseleave', () => {
+        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+          clearTimeout(closeTimer);
+          closeTimer = setTimeout(closeDropdown, 200);
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!registerRoot.contains(e.target)) {
+          closeDropdown();
+        }
+      });
+
+      dropdown.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', (ev) => {
+          closeDropdown();
+        });
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeDropdown();
+      });
+
+      window.addEventListener('resize', () => closeDropdown());
+    })();
+  </script>
+</nav>

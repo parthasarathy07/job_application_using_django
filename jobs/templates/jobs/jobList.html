@@ -2,25 +2,29 @@
 
 {% block title %}Job List{% endblock %}
 
+{% load static %}
+
+{% block extra_css%}
+<link rel="stylesheet" href="{% static 'css/job_search.css' %}">
+{% endblock%}
+
 {% block content %}
-<h1>Available Jobs</h1>
-
-{% if jobs %}
-<p>Browse the latest job postings below.</p>
-
-<div class="list-group mt-3">
-    {% for job in jobs %}
-        <a href="{{ job.get_absolute_url }}" class="list-group-item list-group-item-action">
-            <h5 class="mb-1">{{ job.title }}</h5>
-            <small class="text-muted">{{ job.company }} · {{ job.location }} · Posted on {{ job.posted_date|date:"M d, Y" }}</small>
-            <br>
-            {% if job.salary %}
-                <span class="badge bg-success">₹ {{ job.salary }}</span>
-            {% endif %}
-        </a>
-    {% endfor %}
+<div class="job-results">
+    {% if jobs %}
+        {% for job in jobs %}
+            <div class="job-card">
+                <h3>{{ job.title }}</h3>
+                <p><strong>Company:</strong> {{ job.company }}</p>
+                <p><strong>Location:</strong> {{ job.location }}</p>
+                {% if job.salary %}
+                    <p><strong>Salary:</strong> ${{ job.salary }}</p>
+                {% endif %}
+                <p>{{ job.description|truncatewords:30 }}</p>
+                <a href="{% url 'jobs:jobDetail' job.pk %}">View Details</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No jobs found.</p>
+    {% endif %}
 </div>
-{%else%}
-<p class="text-muted">No jobs available right now.</p>
-{%endif%}
 {% endblock %}
