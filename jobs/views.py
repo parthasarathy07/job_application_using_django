@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required,user_passes_test
+from django.db.models import Q
 
 
 from .models import Job
@@ -42,12 +43,13 @@ def post_job(request):
 
 def job_search(request):
     query = request.GET.get("q")
+    jobs = Job.objects.all()
+
     if query:
-        jobs = (
-            Job.objects.filter(title__icontains=query)
-            | Job.objects.filter(company__icontains=query)
-            | Job.objects.filter(location__icontains=query)
+        jobs = Job.objects.filter(
+            Q(title__icontains=query)
+            | Q(company__name__icontains=query)
+            | Q(location__icontains=query)
         )
-    else:
-        jobs = Job.objects.all()
+
     return render(request, "jobs/job_search.html", {"jobs": jobs, "query": query})
