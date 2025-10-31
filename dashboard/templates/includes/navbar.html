@@ -35,6 +35,15 @@
       </a>
 
       {% if user.is_authenticated %}
+        {% if user.is_staff %}
+            <a href="{% url 'jobs:myPosts' %}"
+               class="relative text-white ml-[15px] transition-colors duration-300 hover:text-blue-500 
+                      after:content-[''] after:absolute after:w-0 after:h-[2px] after:-bottom-1 
+                      after:left-0 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full">
+              My Posts
+            </a>
+       {% endif %}
+
         <a href="{% url 'logout' %}?next={{ request.path }}"
            class="relative text-white ml-[15px] transition-colors duration-300 hover:text-red-400 
                   after:content-[''] after:absolute after:w-0 after:h-[2px] after:-bottom-1 

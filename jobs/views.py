@@ -53,3 +53,16 @@ def job_search(request):
         )
 
     return render(request, "jobs/job_search.html", {"jobs": jobs, "query": query})
+
+@staff_member_required
+@login_required
+def my_posts(request):
+    user = request.user
+
+    if user.is_superuser:
+        jobs = Job.objects.all()
+    else:
+        jobs = Job.objects.filter(company__profiles__user=user)
+
+    context = {'jobs': jobs}
+    return render(request, 'jobs/my_posts.html', context)
