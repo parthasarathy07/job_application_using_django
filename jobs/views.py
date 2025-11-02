@@ -12,6 +12,8 @@ from django.http import HttpResponse
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
+from review.forms import ReviewForm
+
 def non_superuser_required(view_func):
     return user_passes_test(lambda u: not u.is_superuser)(view_func)
 
@@ -27,7 +29,42 @@ def jobListView(request):
 def job_detail(request, pk):
     job = get_object_or_404(Job, pk=pk)
     back_from = request.GET.get("from", "job-list")
-    return render(request, "jobs/job_detail.html", {"job": job, "back_from": back_from})
+    company = job.company
+
+    reviews = (
+        company.reviews
+        .select_related('user')
+        .exclude(comment__isnull=True)
+        .exclude(comment__exact='')
+    )
+
+    user_review = None
+
+    if request.user.is_authenticated:
+        user_review = company.reviews.filter(user=request.user).first()
+
+        if request.method == "POST":
+            form = ReviewForm(request.POST, instance=user_review)
+            if form.is_valid():
+                review = form.save(commit=False)
+                review.user = request.user
+                review.company = company
+                review.save()
+                return redirect('jobs:jobDetail', pk=pk)
+        else:
+            form = ReviewForm(instance=user_review)
+    else:
+        form = None
+
+    context = {
+        "job": job,
+        "company": company,
+        "reviews": reviews,
+        "form": form,
+        "user_review": user_review,
+        "back_from": back_from,
+    }
+    return render(request, "jobs/job_detail.html", context)
 
 @non_superuser_required
 @staff_member_required(login_url='/accounts/login/')
