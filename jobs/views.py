@@ -91,7 +91,6 @@ def post_job(request):
 
 @non_superuser_required
 @staff_member_required(login_url='/accounts/login/')
-@login_required
 def edit_job(request, pk):
     job = get_object_or_404(Job, pk=pk, company=request.user.profile.company)
 
@@ -110,13 +109,12 @@ def edit_job(request, pk):
 
 @non_superuser_required
 @staff_member_required(login_url='/accounts/login/')
-@login_required
 def delete_job(request, pk):
     job = get_object_or_404(Job, pk=pk, company=request.user.profile.company)
 
     if request.method == "POST":
         job.delete()
-        return redirect('jobs:jobDetail', pk=pk)
+        return redirect('jobs:myPosts')
 
     return render(request, "jobs/confirm_delete.html", {"job": job})
 
