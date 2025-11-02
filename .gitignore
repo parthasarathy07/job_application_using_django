@@ -65,6 +65,12 @@ env/
 venv/ 
 ENV/ 
 
+# Tailwind build
+/static/css/output.css
+
+# Node dependencies
+/node_modules
+
 # mypy 
 .mypy_cache/ 
 
