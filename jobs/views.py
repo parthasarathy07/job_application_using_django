@@ -89,6 +89,37 @@ def post_job(request):
         form = JobForm()
     return render(request, "jobs/post_job.html", {"form": form})
 
+@non_superuser_required
+@staff_member_required(login_url='/accounts/login/')
+@login_required
+def edit_job(request, pk):
+    job = get_object_or_404(Job, pk=pk, company=request.user.profile.company)
+
+    if request.method == "POST":
+        form = JobForm(request.POST, instance=job)
+        if form.is_valid():
+            updated_job = form.save(commit=False)
+            if not updated_job.location:
+                updated_job.location = updated_job.company.main_location
+            updated_job.save()
+            return redirect('jobs:jobDetail', pk=pk)
+    else:
+        form = JobForm(instance=job)
+
+    return render(request, "jobs/edit_job.html", {"form": form, "job": job})
+
+@non_superuser_required
+@staff_member_required(login_url='/accounts/login/')
+@login_required
+def delete_job(request, pk):
+    job = get_object_or_404(Job, pk=pk, company=request.user.profile.company)
+
+    if request.method == "POST":
+        job.delete()
+        return redirect('jobs:jobDetail', pk=pk)
+
+    return render(request, "jobs/confirm_delete.html", {"job": job})
+
 def job_search(request):
     query = request.GET.get("q")
     jobs = Job.objects.all()

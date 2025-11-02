@@ -27,6 +27,14 @@
       {{ job.description|default:"No description provided." }}
     </p>
   </div>
+  <br>
+  <div>
+    {% if user.is_staff and job.company == user.profile.company %}
+      <a href="{% url 'jobs:editJob' job.pk %}" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</a>
+      <a href="{% url 'jobs:deleteJob' job.pk %}" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</a>
+    {% endif %}
+  </div>
+  
 
   <div class="mt-8 flex justify-between items-center">
     {% if back_from == "myPosts" %}
