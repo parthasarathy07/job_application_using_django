@@ -7,7 +7,7 @@
     </a>
 
     <button id="menu-toggle"
-            class="lg:hidden focus:outline-none text-gray-300 hover:text-white">
+            class="lg:hidden focus:outline-none text-gray-300 hover:text-white z-50">
       <svg xmlns="http://www.w3.org/2000/svg"
            class="h-6 w-6" fill="none"
            viewBox="0 0 24 24" stroke="currentColor">
@@ -16,19 +16,29 @@
       </svg>
     </button>
 
+    <!-- Overlay (for mobile only) -->
+    <div id="menu-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden lg:hidden z-40"></div>
+
+    <!-- Sidebar Menu (mobile slide-in) -->
     <div id="menu"
-         class="hidden lg:flex flex-col lg:flex-row lg:items-center w-full lg:w-auto mt-3 lg:mt-0 
-                space-y-2 lg:space-y-0 lg:space-x-6 text-sm font-medium">
+         class="fixed top-0 right-0 h-full w-64 bg-[#212529] shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out 
+                flex flex-col space-y-4 p-5 text-sm font-medium lg:static lg:translate-x-0 lg:flex-row lg:space-y-0 lg:space-x-6 lg:w-auto lg:p-0 lg:h-auto lg:bg-transparent z-50">
+
+      <!-- Close Button (mobile) -->
+      <button id="close-menu"
+              class="lg:hidden text-gray-400 hover:text-white self-end mb-4">
+        ✕
+      </button>
 
       <a href="{% url 'dashboard:dashboard' %}"
-         class="relative text-white ml-[15px] transition-colors duration-300 hover:text-blue-500 
+         class="relative text-white transition-colors duration-300 hover:text-blue-500 
                 after:content-[''] after:absolute after:w-0 after:h-[2px] after:-bottom-1 
                 after:left-0 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full">
         Home
       </a>
 
       <a href="{% url 'jobs:jobList' %}"
-         class="relative text-white ml-[15px] transition-colors duration-300 hover:text-blue-500 
+         class="relative text-white transition-colors duration-300 hover:text-blue-500 
                 after:content-[''] after:absolute after:w-0 after:h-[2px] after:-bottom-1 
                 after:left-0 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full">
         Jobs
@@ -37,7 +47,7 @@
       {% if user.is_authenticated %}
         {% if user.is_staff %}
             <a href="{% url 'jobs:myPosts' %}"
-               class="relative text-white ml-[15px] transition-colors duration-300 hover:text-blue-500 
+               class="relative text-white transition-colors duration-300 hover:text-blue-500 
                       after:content-[''] after:absolute after:w-0 after:h-[2px] after:-bottom-1 
                       after:left-0 after:bg-blue-600 after:transition-all after:duration-300 hover:after:w-full">
               My Posts
@@ -45,14 +55,14 @@
        {% endif %}
 
         <a href="{% url 'logout' %}?next={{ request.path }}"
-           class="relative text-white ml-[15px] transition-colors duration-300 hover:text-red-400 
+           class="relative text-white transition-colors duration-300 hover:text-red-400 
                   after:content-[''] after:absolute after:w-0 after:h-[2px] after:-bottom-1 
                   after:left-0 after:bg-red-500 after:transition-all after:duration-300 hover:after:w-full">
           Logout
         </a>
 
       {% else %}
-        <div class="flex items-center space-x-3 ml-[15px]">
+        <div class="flex flex-col space-y-3 lg:flex-row lg:items-center lg:space-y-0 lg:space-x-3">
           <a href="{% url 'login' %}"
              class="relative text-white transition-colors duration-300 hover:text-blue-500 
                     after:content-[''] after:absolute after:w-0 after:h-[2px] after:-bottom-1 
@@ -60,7 +70,7 @@
             Login
           </a>
 
-          <span class="text-gray-500">/</span>
+          <div class="hidden lg:block text-gray-500">/</div>
 
           <div class="relative" id="register-root">
             <button id="register-button"
@@ -77,10 +87,10 @@
             </button>
 
             <ul id="register-dropdown"
-                class="lg:absolute lg:top-full lg:right-0 mt-2 lg:mt-3 w-52 bg-gray-800 text-gray-200 rounded-md shadow-lg
-                       transform transition-all duration-200 origin-top-right
-                       opacity-0 invisible pointer-events-none lg:translate-y-1
-                       lg:backdrop-filter lg:backdrop-blur-none">
+                class="absolute lg:top-full right-0 mt-2 w-52 bg-gray-800 
+                text-gray-200 rounded-md shadow-lg transform transition-all 
+                duration-200 origin-top-right opacity-0 invisible pointer-events-none 
+                translate-y-1 lg:translate-y-1 lg:backdrop-filter lg:backdrop-blur-none z-50">
               <li>
                 <a href="{% url 'staff_signup' %}"
                    class="block px-3 text-center py-2 hover:bg-gray-700 rounded-t-md transition-colors duration-200">
@@ -107,22 +117,35 @@
     (function () {
       const menuToggle = document.getElementById('menu-toggle');
       const menu = document.getElementById('menu');
+      const closeMenu = document.getElementById('close-menu');
+      const overlay = document.getElementById('menu-overlay');
       const registerRoot = document.getElementById('register-root');
       const registerButton = document.getElementById('register-button');
       const dropdown = document.getElementById('register-dropdown');
 
-      menuToggle && menuToggle.addEventListener('click', () => {
-        menu.classList.toggle('hidden');
-      });
+      // Mobile slide-in menu
+      function openMenu() {
+        menu.classList.remove('translate-x-full');
+        overlay.classList.remove('hidden');
+      }
+      function closeSideMenu() {
+        menu.classList.add('translate-x-full');
+        overlay.classList.add('hidden');
+      }
 
+      menuToggle?.addEventListener('click', openMenu);
+      closeMenu?.addEventListener('click', closeSideMenu);
+      overlay?.addEventListener('click', closeSideMenu);
+
+      // Dropdown handling
       function openDropdown() {
-        dropdown.classList.remove('opacity-0', 'invisible', 'pointer-events-none', 'lg:translate-y-1');
+        dropdown.classList.remove('opacity-0', 'invisible', 'pointer-events-none', 'translate-y-1');
         dropdown.classList.add('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
         registerButton.setAttribute('aria-expanded', 'true');
         registerButton.querySelector('svg')?.classList.add('rotate-180');
       }
       function closeDropdown() {
-        dropdown.classList.add('opacity-0', 'invisible', 'pointer-events-none', 'lg:translate-y-1');
+        dropdown.classList.add('opacity-0', 'invisible', 'pointer-events-none', 'translate-y-1');
         dropdown.classList.remove('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
         registerButton.setAttribute('aria-expanded', 'false');
         registerButton.querySelector('svg')?.classList.remove('rotate-180');
@@ -130,43 +153,31 @@
 
       closeDropdown();
 
-      registerButton.addEventListener('click', (e) => {
+      registerButton?.addEventListener('click', (e) => {
         e.stopPropagation();
         const expanded = registerButton.getAttribute('aria-expanded') === 'true';
-        if (expanded) closeDropdown(); else openDropdown();
-      });
-
-      let closeTimer = null;
-      registerRoot.addEventListener('mouseenter', () => {
-        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-          clearTimeout(closeTimer);
-          openDropdown();
-        }
-      });
-      registerRoot.addEventListener('mouseleave', () => {
-        if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-          clearTimeout(closeTimer);
-          closeTimer = setTimeout(closeDropdown, 200);
-        }
+        expanded ? closeDropdown() : openDropdown();
       });
 
       document.addEventListener('click', (e) => {
-        if (!registerRoot.contains(e.target)) {
-          closeDropdown();
-        }
+        if (!registerRoot.contains(e.target)) closeDropdown();
       });
 
       dropdown.querySelectorAll('a').forEach(a => {
-        a.addEventListener('click', (ev) => {
-          closeDropdown();
-        });
+        a.addEventListener('click', closeDropdown);
       });
 
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeDropdown();
+        if (e.key === 'Escape') {
+          closeDropdown();
+          closeSideMenu();
+        }
       });
 
-      window.addEventListener('resize', () => closeDropdown());
+      window.addEventListener('resize', () => {
+        closeDropdown();
+        closeSideMenu();
+      });
     })();
   </script>
 </nav>
