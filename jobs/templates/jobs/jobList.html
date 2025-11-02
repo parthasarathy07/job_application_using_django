@@ -2,29 +2,8 @@
 
 {% block title %}Job List{% endblock %}
 
-{% load static %}
-
-{% block extra_css%}
-<link rel="stylesheet" href="{% static 'css/job_search.css' %}">
-{% endblock%}
-
 {% block content %}
-<div class="job-results">
-    {% if jobs %}
-        {% for job in jobs %}
-            <div class="job-card">
-                <h3>{{ job.title }}</h3>
-                <p><strong>Company:</strong> {{ job.company }}</p>
-                <p><strong>Location:</strong> {{ job.location }}</p>
-                {% if job.salary %}
-                    <p><strong>Salary:</strong> ${{ job.salary }}</p>
-                {% endif %}
-                <p>{{ job.description|truncatewords:30 }}</p>
-                <a href="{% url 'jobs:jobDetail' job.pk %}">View Details</a>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>No jobs found.</p>
-    {% endif %}
-</div>
+
+   {% include "jobs/_job_list_card.html" with job=job from_page="" heading="List of Jobs"%}
+
 {% endblock %}
