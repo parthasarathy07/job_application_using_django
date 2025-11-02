@@ -10,8 +10,5 @@ class Company(models.Model):
 
     def __str__(self):
         return self.name
- 
-    @property
-    def average_rating(self):
-        return self.reviews.aggregate(avg=Avg('rating'))['avg'] or 0
+    
     

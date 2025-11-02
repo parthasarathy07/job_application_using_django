@@ -48,13 +48,13 @@
 
 </div>
 <div class="border-t border-gray-200 pt-6 mt-8">
-  <h2 class="text-xl font-semibold text-gray-900 mb-4">Company Reviews ({{ company.reviews.count }})</h2>
+  <h2 class="text-xl font-semibold text-gray-900 mb-4">Company Reviews ({{ review_count }})</h2>
 
   <!-- Average Rating -->
   <p class="text-gray-700 mb-4">
     <strong>Average Rating:</strong>
-    {% if company.average_rating %}
-      {{ company.average_rating|floatformat:1 }} ★
+    {% if average_rating %}
+      {{ average_rating|floatformat:1 }} ★
     {% else %}
       No ratings yet
     {% endif %}
@@ -116,6 +116,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const stars = document.querySelectorAll("#starRating button");
   const hiddenInput = document.querySelector("input[name='rating']");
+  if (!hiddenInput) return;
   let currentRating = parseInt(hiddenInput.value || 0);
 
   const setStars = (rating) => {

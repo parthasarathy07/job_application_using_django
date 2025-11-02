@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required,user_passes_test
-from django.db.models import Q
+from django.db.models import Q, Avg, Count
 
 from application.models import Application
 from .models import Job
@@ -31,6 +31,11 @@ def job_detail(request, pk):
     back_from = request.GET.get("from", "job-list")
     company = job.company
 
+    review_stats = company.reviews.aggregate(
+        average_rating=Avg('rating'),
+        review_count=Count('id')
+    )
+
     reviews = (
         company.reviews
         .select_related('user')
@@ -39,6 +44,7 @@ def job_detail(request, pk):
     )
 
     user_review = None
+    form = None
 
     if request.user.is_authenticated:
         user_review = company.reviews.filter(user=request.user).first()
@@ -53,8 +59,6 @@ def job_detail(request, pk):
                 return redirect('jobs:jobDetail', pk=pk)
         else:
             form = ReviewForm(instance=user_review)
-    else:
-        form = None
 
     context = {
         "job": job,
@@ -63,6 +67,8 @@ def job_detail(request, pk):
         "form": form,
         "user_review": user_review,
         "back_from": back_from,
+        "average_rating": review_stats.get('average_rating') or 0,
+        "review_count": review_stats.get('review_count') or 0,
     }
     return render(request, "jobs/job_detail.html", context)
 
