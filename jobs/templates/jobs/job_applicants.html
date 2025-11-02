@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Applicants for {{ job.title }}{% endblock %}
+
+{% block content %}
+<div class="p-4 sm:p-8">
+  
+  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Applicants for "{{ job.title }}"</h2>
+    <div class="flex flex-col sm:flex-row gap-3">
+      <a href="{% url 'jobs:downloadApplicantsPDF' job.pk %}" 
+         class="px-4 py-2 text-sm sm:text-base bg-green-600 text-white rounded-lg hover:bg-green-700 text-center">
+        Download as PDF
+      </a>
+      <a href="{% url 'jobs:myPosts' %}" 
+         class="px-4 py-2 text-sm sm:text-base bg-gray-600 text-white rounded-lg hover:bg-gray-700 text-center">
+        ← Back to My Posts
+      </a>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto rounded-lg shadow-md border border-gray-200 bg-white">
+    <table class="min-w-full text-sm sm:text-base">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="py-2 px-4 border-b text-left whitespace-nowrap">Username</th>
+          <th class="py-2 px-4 border-b text-left whitespace-nowrap">Email</th>
+          <th class="py-2 px-4 border-b text-left whitespace-nowrap">Applied Date</th>
+          <th class="py-2 px-4 border-b text-center whitespace-nowrap">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for app in applications %}
+        <tr class="hover:bg-gray-50 transition">
+          <td class="py-2 px-4 border-b break-words">{{ app.user.username }}</td>
+          <td class="py-2 px-4 border-b break-words">{{ app.user.email }}</td>
+          <td class="py-2 px-4 border-b whitespace-nowrap">{{ app.applied_date|date:"Y-m-d H:i" }}</td>
+          <td class="py-2 px-4 border-b text-center">
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ app.user.email }}"
+               target="_blank"
+               class="inline-block px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 text-sm sm:text-base">
+               Email
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="py-4 text-center text-gray-500">No applicants yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

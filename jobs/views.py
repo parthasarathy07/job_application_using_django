@@ -8,6 +8,10 @@ from application.models import Application
 from .models import Job
 from .forms import JobForm
 
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+
 def non_superuser_required(view_func):
     return user_passes_test(lambda u: not u.is_superuser)(view_func)
 
@@ -74,3 +78,35 @@ def apply_job(request, pk):
     job = get_object_or_404(Job, pk=pk)
     Application.objects.get_or_create(user=request.user, job=job)
     return redirect('jobs:jobList')
+
+@staff_member_required
+def job_applicants(request, pk):
+    job = get_object_or_404(Job, pk=pk)
+    applications = job.applications.select_related('user').order_by('-applied_date')
+    return render(request, 'jobs/job_applicants.html', {'job': job, 'applications': applications})
+
+@staff_member_required
+def download_applicants_pdf(request, pk):
+    job = get_object_or_404(Job, pk=pk)
+    applications = job.applications.select_related('user').order_by('-applied_date')
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{job.title}_applicants.pdf"'
+
+    p = canvas.Canvas(response, pagesize=letter)
+    p.setFont("Helvetica-Bold", 14)
+    p.drawString(50, 750, f"Applicants for {job.title}")
+    p.setFont("Helvetica", 12)
+
+    y = 720
+    for app in applications:
+        p.drawString(50, y, f"Name: {app.user.username}")
+        p.drawString(200, y, f"Email: {app.user.email}")
+        p.drawString(400, y, f"Date: {app.applied_date.strftime('%Y-%m-%d %H:%M')}")
+        y -= 20
+        if y < 50:
+            p.showPage()
+            y = 750
+
+    p.save()
+    return response
