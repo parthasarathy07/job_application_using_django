@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'company.apps.CompanyConfig',
     'application.apps.ApplicationConfig',
+    'review.apps.ReviewConfig',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
