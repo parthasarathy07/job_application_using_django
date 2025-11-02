@@ -26,7 +26,8 @@ def jobListView(request):
 
 def job_detail(request, pk):
     job = get_object_or_404(Job, pk=pk)
-    return render(request, "jobs/job_detail.html", {"job": job})
+    back_from = request.GET.get("from", "job-list")
+    return render(request, "jobs/job_detail.html", {"job": job, "back_from": back_from})
 
 @non_superuser_required
 @staff_member_required(login_url='/accounts/login/')

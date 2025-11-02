@@ -20,7 +20,7 @@
       <p class="text-sm text-gray-500 mb-2"><strong>Company:</strong> {{ job.company.name }}</p>
       <p class="text-sm text-gray-500 mb-2"><strong>Location:</strong> {{ job.location }}</p>
       <p class="text-sm text-gray-500 mb-4"><strong>Salary:</strong> ₹{{ job.salary }}</p>
-      <a href="{{ job.get_absolute_url }}" class="text-blue-600 font-medium hover:underline">View Details →</a>
+      <a href="{{ job.get_absolute_url }}?from=myPosts" class="text-blue-600 font-medium hover:underline">View Details →</a>
     </div>
     {% endfor %}
   </div>

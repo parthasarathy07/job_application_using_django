@@ -39,7 +39,7 @@
 
           <p class="text-gray-600 mb-3">{{ job.description|truncatewords:25 }}</p>
 
-          <a href="{% url 'jobs:jobDetail' job.pk %}"
+          <a href="{{ job.get_absolute_url }}?from=dashboard"
              class="inline-block mt-2 text-blue-600 font-semibold hover:underline">
              View Details →
           </a>

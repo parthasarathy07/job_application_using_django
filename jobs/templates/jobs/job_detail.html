@@ -29,9 +29,16 @@
   </div>
 
   <div class="mt-8 flex justify-between items-center">
-    <a href="{% url 'jobs:jobList' %}" class="text-blue-600 hover:underline">
-      ← Back to Job Listings
-    </a>
+    {% if back_from == "myPosts" %}
+      <a href="{% url 'jobs:myPosts' %}" class="text-blue-600 hover:underline">← Back to My Posts</a>
+    {% elif back_from == "dashboard" %}
+      <a href="{% url 'dashboard:dashboard' %}" class="text-blue-600 hover:underline">← Back to Dashboard</a>
+    {% elif back_from == "jobSearch" %}
+      <a href="{% url 'jobs:jobSearch' %}" class="text-blue-600 hover:underline">← Back to Search</a>
+    {% else %}
+      <a href="{% url 'jobs:jobList' %}" class="text-blue-600 hover:underline">← Back to Job Listings</a>
+    {% endif %}
+  
     {% if user.is_authenticated and not user.is_staff and not user.is_superuser %}
       <a href="{% url 'jobs:applyJob' job.pk %}" class="bg-blue-600 text-white font-medium px-5 py-2 rounded-md hover:bg-blue-700 transition">
         Apply Now

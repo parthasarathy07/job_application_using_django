@@ -27,7 +27,7 @@
                     <p><strong>Salary:</strong> ${{ job.salary }}</p>
                 {% endif %}
                 <p>{{ job.description|truncatewords:30 }}</p>
-                <a href="{% url 'jobs:jobDetail' job.pk %}">View Details</a>
+                <a href="{{ job.get_absolute_url }}?from=jobSearch">View Details</a>
             </div>
         {% endfor %}
     {% else %}
