@@ -14,7 +14,7 @@
 
       <a href="{% url 'jobs:jobApplicants' job.pk %}"
          class="absolute top-3 right-3 z-10 text-sm md:text-base text-blue-600 font-medium hover:underline">
-         View Applicants
+         View Applicants ({{ job.applications.count }})
       </a>
       <h2 class="text-xl font-semibold text-gray-900 mb-2 mt-6">{{ job.title }}</h2>
       <p class="text-sm text-gray-500 mb-2"><strong>Company:</strong> {{ job.company.name }}</p>
