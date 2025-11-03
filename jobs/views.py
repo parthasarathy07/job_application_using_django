@@ -135,9 +135,11 @@ def my_posts(request):
     user = request.user
 
     if user.is_superuser:
-        jobs = Job.objects.all()
+        jobs_qs = Job.objects.all()
     else:
-        jobs = Job.objects.filter(company__profiles__user=user)
+        jobs_qs = Job.objects.filter(company__profiles__user=user)
+    
+    jobs = jobs_qs.annotate(application_count=Count('applications'))
 
     context = {'jobs': jobs}
     return render(request, 'jobs/my_posts.html', context)
