@@ -2,20 +2,37 @@
 
 {% load static %}
 
-{% block extra_css%}
-<link rel="stylesheet" href="{% static 'css/job_search.css' %}">
-{% endblock%}
 
 {% block content %}
+<div class="max-w-4xl mx-auto mt-12 px-6">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-2 text-center">
+    🔍 Search Jobs
+  </h2>
 
-<div class="search-container">
-    <h2>Search Jobs</h2>
-    <form method="GET" action="{% url 'jobs:jobSearch' %}">
-        <input type="text" name="q" placeholder="Search by title, company, or location" value="{{ query|default:'' }}">
-        <button type="submit">Search</button>
-    </form>
+  <form method="GET" action="{% url 'jobs:jobSearch' %}"
+        class="flex flex-col sm:flex-row items-center justify-center gap-3 bg-white shadow-md rounded-xl p-4 border border-gray-200">
+
+    <input type="text"
+           name="q"
+           placeholder="Search by title, company, or location..."
+           value="{{ query|default:'' }}"
+           class="w-full sm:flex-grow border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+
+    <div class="flex gap-2 w-full sm:w-auto">
+      <button type="submit"
+              class="w-full sm:w-auto bg-blue-600 text-white font-semibold px-5 py-2 rounded-lg hover:bg-blue-700 transition transform hover:-translate-y-0.5">
+        Search
+      </button>
+
+      {% if query %}
+      <a href="{% url 'jobs:jobSearch' %}"
+         class="w-full sm:w-auto bg-red-600 text-white font-semibold px-5 py-2 rounded-lg hover:bg-red-700 transition transform hover:-translate-y-0.5 text-center">
+        Clear
+      </a>
+      {% endif %}
+    </div>
+  </form>
 </div>
 
-{% include "jobs/_job_list_card.html" with from_page="jobSearch" heading="Search Results"%}
-
+{% include "jobs/_job_list_card.html" with from_page="jobSearch" heading="Search Results" %}
 {% endblock %}
