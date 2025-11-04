@@ -20,8 +20,44 @@ def non_superuser_required(view_func):
 def non_staff_required(view_func):
     return user_passes_test(lambda u: not u.is_staff)(view_func)
 
+def get_jobs_with_ratings(queryset):
+    return queryset.select_related("company").annotate(
+        average_rating=Avg("company__reviews__rating"),
+        review_count=Count("company__reviews")
+    )
+
+
+def attach_star_counts(jobs):
+    for job in jobs:
+        rating = job.average_rating if getattr(job, "average_rating", None) is not None else 0.0
+        try:
+            rating = float(rating)
+        except Exception:
+            rating = 0.0
+
+        # clamp to [0,5]
+        if rating < 0:
+            rating = 0.0
+        if rating > 5:
+            rating = 5.0
+
+        full = int(rating) 
+        fractional = rating - full
+        has_half = fractional >= 0.5 
+        empty = 5 - full - (1 if has_half else 0)
+
+        # attach simple iterable lists for templates
+        job.full_stars_list = list(range(full))
+        job.has_half_star = has_half
+        job.empty_stars_list = list(range(empty))
+        job.avg_display = f"{rating:.1f}" if rating > 0 else None
+
+    return jobs
+
+
 def jobListView(request):
-    jobList = Job.objects.order_by("-posted_date")
+    jobList = get_jobs_with_ratings(Job.objects.order_by("-posted_date"))
+    attach_star_counts(jobList)
     context = {"jobs": jobList}
     return render(request, "jobs/jobList.html", context=context)
 
@@ -127,6 +163,8 @@ def job_search(request):
             | Q(company__name__icontains=query)
             | Q(location__icontains=query)
         )
+    jobs = get_jobs_with_ratings(jobs)
+    attach_star_counts(jobs)
 
     return render(request, "jobs/job_search.html", {"jobs": jobs, "query": query})
 
