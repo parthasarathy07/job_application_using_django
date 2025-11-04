@@ -13,17 +13,17 @@
                 <div class="flex items-center gap-1 text-lg mb-1">
                   <!-- full stars -->
                   {% for _ in job.full_stars_list %}
-                    <span class="text-yellow-400">★</span>
+                    <span class="text-yellow-400" aria-hidden="true">★</span>
                   {% endfor %}
               
                   <!-- half star -->
                   {% if job.has_half_star %}
-                    <span class="text-yellow-400 opacity-60">★</span>
+                    <span class="text-yellow-400 opacity-60" aria-hidden="true">★</span>
                   {% endif %}
               
                   <!-- empty stars -->
                   {% for _ in job.empty_stars_list %}
-                    <span class="text-gray-300">☆</span>
+                    <span class="text-gray-300" aria-hidden="true">☆</span>
                   {% endfor %}
               
                   <span class="ml-2 text-sm text-gray-600">({{ job.avg_display }})</span>

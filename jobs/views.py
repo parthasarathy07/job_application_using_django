@@ -21,25 +21,18 @@ def non_staff_required(view_func):
     return user_passes_test(lambda u: not u.is_staff)(view_func)
 
 def get_jobs_with_ratings(queryset):
-    return queryset.select_related("company").annotate(
+    jobs= queryset.select_related("company").annotate(
         average_rating=Avg("company__reviews__rating"),
         review_count=Count("company__reviews")
     )
+    return attach_star_counts(jobs)
 
 
 def attach_star_counts(jobs):
     for job in jobs:
-        rating = job.average_rating if getattr(job, "average_rating", None) is not None else 0.0
-        try:
-            rating = float(rating)
-        except Exception:
-            rating = 0.0
+        rating = job.average_rating or 0.0
 
-        # clamp to [0,5]
-        if rating < 0:
-            rating = 0.0
-        if rating > 5:
-            rating = 5.0
+        rating = max(0.0, min(rating, 5.0))
 
         full = int(rating) 
         fractional = rating - full
@@ -57,7 +50,6 @@ def attach_star_counts(jobs):
 
 def jobListView(request):
     jobList = get_jobs_with_ratings(Job.objects.order_by("-posted_date"))
-    attach_star_counts(jobList)
     context = {"jobs": jobList}
     return render(request, "jobs/jobList.html", context=context)
 
@@ -164,7 +156,6 @@ def job_search(request):
             | Q(location__icontains=query)
         )
     jobs = get_jobs_with_ratings(jobs)
-    attach_star_counts(jobs)
 
     return render(request, "jobs/job_search.html", {"jobs": jobs, "query": query})
 
