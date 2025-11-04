@@ -4,13 +4,33 @@
     <div class="flex flex-col gap-6">
       {% for job in jobs %}
         <div class="p-6 bg-white rounded-xl border border-gray-200 shadow-md transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl">
-          <h3 class="text-xl font-semibold text-gray-900 mb-1">{{ job.title }}</h3>
+          
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start">
+            <h3 class="text-xl font-semibold text-gray-900 mb-1">{{ job.title }}</h3>
+
+            <div class="flex flex-col items-start sm:items-end">
+              {% if job.avg_display %}
+                <div class="flex items-center gap-1 text-lg mb-1">
+                  <div class="flex items-center" aria-hidden="true">
+                    {% include "_star_rating.html"%}
+                  </div>
+                  <span class="ml-2 text-sm text-gray-600" aria-hidden="true">({{ job.avg_display }})</span>
+                </div>
+                <p class="text-gray-500 text-sm">Reviews: {{ job.review_count }}</p>
+              {% else %}
+                <p class="text-gray-500 text-sm mb-2 sm:text-right">No ratings yet</p>
+              {% endif %}
+            </div>
+          </div>
+
           <p class="text-gray-700 mb-2"><strong>Company:</strong> {{ job.company }}</p>
           <p class="text-gray-700 mb-2"><strong>Location:</strong> {{ job.location }}</p>
 
           {% if job.salary %}
             <p class="text-gray-700 mb-2"><strong>Salary:</strong> ₹{{ job.salary }}</p>
           {% endif %}
+
+          <p class="text-gray-600 mb-2"><strong>Posted:</strong> {{ job.posted_date|date:"M d, Y" }}</p>
 
           <a href="{{ job.get_absolute_url }}?from={{ from_page|default:'' }}"
              class="inline-block mt-2 text-blue-600 font-bold hover:underline">
