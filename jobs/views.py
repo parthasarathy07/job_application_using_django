@@ -14,6 +14,10 @@ from reportlab.pdfgen import canvas
 
 from review.forms import ReviewForm
 
+from django.utils import timezone
+import pytz
+
+
 def non_superuser_required(view_func):
     return user_passes_test(lambda u: not u.is_superuser)(view_func)
 
@@ -200,11 +204,15 @@ def download_applicants_pdf(request, pk):
     p.drawString(50, 750, f"Applicants for {job.title}")
     p.setFont("Helvetica", 12)
 
+    indian_tz = pytz.timezone('Asia/Kolkata')
     y = 720
     for app in applications:
+        local_time = timezone.localtime(app.applied_date, indian_tz)
+        formatted_date = local_time.strftime('%b %d, %Y - %I:%M %p') 
+
         p.drawString(50, y, f"Name: {app.user.username}")
         p.drawString(200, y, f"Email: {app.user.email}")
-        p.drawString(400, y, f"Date: {app.applied_date.strftime('%Y-%m-%d %H:%M')}")
+        p.drawString(400, y, f"Date: {formatted_date}")
         y -= 20
         if y < 50:
             p.showPage()
