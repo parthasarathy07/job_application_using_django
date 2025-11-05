@@ -12,11 +12,11 @@
     {% block extra_css %}{% endblock %}
   </head>
 
-  <body class="flex flex-col min-h-screen bg-gray-50 text-gray-900">
+  <body class="flex flex-col min-h-screen bg-gray-100 text-gray-900">
 
     {% include "includes/navbar.html" %}
 
-    <main class="flex-grow container mx-auto px-4 py-8">
+    <main class="flex-grow container mx-auto px-4 py-8 bg-gray-100">
       {% block content %}{% endblock %}
     </main>
 
